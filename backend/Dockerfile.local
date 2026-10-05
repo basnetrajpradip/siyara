@@ -1,0 +1,30 @@
+# syntax=docker/dockerfile:1
+
+# Dev image: source is bind-mounted from the host (docker-compose.local.yml);
+# env comes from backend/.env via env_file at runtime.
+
+FROM node:24-slim
+
+# Build tools for the native bcrypt binary
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3 make g++ openssl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g pnpm@11 \
+    && pnpm config set store-dir /tmp/pnpm-store
+
+WORKDIR /app
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# --ignore-scripts skips the prisma postinstall, which needs env at build time;
+# generate + migrate run on container start with the env from env_file.
+RUN pnpm install --frozen-lockfile --ignore-scripts \
+    && pnpm rebuild bcrypt esbuild
+
+COPY . .
+
+EXPOSE 4000
+
+# Entrypoint (generate -> migrate -> watch) is set in docker-compose.local.yml
+CMD ["pnpm", "dev"]

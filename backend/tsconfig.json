@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+
+    /* Output */
+    "rootDir": ".",
+    "outDir": "dist",
+    "sourceMap": true,
+    "removeComments": true,
+
+    /* Strictness */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Module Interop */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    /* Type Safety */
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+
+    /* Performance */
+    "incremental": true,
+
+    /* Node */
+    "types": ["node"],
+
+    "paths": {
+      "@db": ["./src/generated/prisma/client/index.ts"]
+    }
+  },
+
+  "include": ["prisma/src", "**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,376 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-serif: var(--font-playfair), "Playfair Display", Georgia, serif; /* font-serif  — headings */
+    --font-sans: var(--font-jost), "Jost", ui-sans-serif, system-ui, sans-serif; /* font-sans — body/UI */
+    --font-script: var(--font-pinyon), "Pinyon Script", cursive; /* font-script — logo only */
+
+    /* Radius scale (no palette reset in this namespace, safe to keep inline) */
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@theme {
+    /* Remove Tailwind's default palette so only Syara colors exist */
+    --color-*: initial;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-transparent: transparent;
+    --color-current: currentColor;
+
+    /* --- Primary · brand-* : buttons, prices, links, sale badges ---------- */
+    --color-brand-50: #fdf2f5;
+    --color-brand-100: #fadce5;
+    --color-brand-200: #f3b4c7;
+    --color-brand-300: #e988a6;
+    --color-brand-400: #d95f86;
+    --color-brand-500: #c93a68;
+    --color-brand-600: #b02355;
+    --color-brand-700: #8f1c45;
+    --color-brand-800: #701636;
+    --color-brand-900: #4a0e24;
+
+    /* --- Secondary · gold-* : zari accents, ratings, premium tags --------- */
+    /* Not for body text below 700 */
+    --color-gold-50: #fdf9ee;
+    --color-gold-100: #faf1d9;
+    --color-gold-200: #f3e3b8;
+    --color-gold-300: #ead39a;
+    --color-gold-400: #dcb968;
+    --color-gold-500: #c9a24b;
+    --color-gold-600: #a37f33;
+    --color-gold-700: #7f6227;
+    --color-gold-800: #5c461d;
+    --color-gold-900: #3b2d13;
+
+    /* --- Neutral · ink-* : plum-tinted greys ------------------------------ */
+    --color-ink-50: #faf6f7;
+    --color-ink-100: #f2ebed;
+    --color-ink-200: #e2d6da;
+    --color-ink-300: #c3adb5;
+    --color-ink-400: #a58e96;
+    --color-ink-500: #857076;
+    --color-ink-600: #6b565d;
+    --color-ink-700: #524047;
+    --color-ink-800: #3a2a30;
+    --color-ink-900: #291c21;
+    --color-ink-950: #241318;
+
+    /* --- Surfaces: cream-* and blush-* ------------------------------------ */
+    --color-cream-50: #fffdfb;  /* page */
+    --color-cream-100: #fbf3ec; /* muted band */
+    --color-cream-200: #f5e6d8; /* hover fill */
+    --color-cream-300: #ecd5c0; /* input border */
+    --color-blush-50: #fdf4f6;  /* subtle panel */
+    --color-blush-100: #fae6eb; /* hairlines */
+    --color-blush-200: #f4c7d3; /* selection */
+    --color-blush-300: #eba3b6; /* accent tint */
+
+    /* --- Feedback ---------------------------------------------------------
+     *    Rule: 50 background · 200 border · 700 text · 600 solid badge + white */
+    --color-success-50: #effaf3;
+    --color-success-100: #d7f2e0;
+    --color-success-200: #b0e4c3;
+    --color-success-300: #7fcf9f;
+    --color-success-400: #4db57b;
+    --color-success-500: #2a9a5f;
+    --color-success-600: #1e7d4c;
+    --color-success-700: #19643f;
+    --color-success-800: #154f33;
+    --color-success-900: #0f3824;
+
+    --color-warning-50: #fff8eb;
+    --color-warning-100: #feecc7;
+    --color-warning-200: #fdd68a;
+    --color-warning-300: #fbbc4d;
+    --color-warning-400: #f59f1f;
+    --color-warning-500: #e0820b;
+    --color-warning-600: #c06506;
+    --color-warning-700: #9a4b09;
+    --color-warning-800: #7c3c0e;
+    --color-warning-900: #66320f;
+
+    --color-error-50: #fef3f2;
+    --color-error-100: #fee4e2;
+    --color-error-200: #fecdca;
+    --color-error-300: #fda29b;
+    --color-error-400: #f97066;
+    --color-error-500: #f04438;
+    --color-error-600: #d92d20;
+    --color-error-700: #b42318;
+    --color-error-800: #912018;
+    --color-error-900: #7a271a;
+
+    --color-info-50: #f2f6fb;
+    --color-info-100: #e1eaf5;
+    --color-info-200: #c3d5ea;
+    --color-info-300: #97b6d8;
+    --color-info-400: #6690c0;
+    --color-info-500: #4673a8;
+    --color-info-600: #365b8c;
+    --color-info-700: #2d4a72;
+    --color-info-800: #283f5f;
+    --color-info-900: #1f3048;
+
+    /* --- Semantic roles --------------------------------------------------- */
+    /* Text  → text-text-primary, text-text-link … */
+    --color-text-primary: #291c21;   /* ink-900 · 16.1:1 */
+    --color-text-secondary: #6b565d; /* ink-600 · 6.7:1 */
+    --color-text-tertiary: #857076;  /* ink-500 · 4.5:1, cream/white only */
+    --color-text-disabled: #c3adb5;  /* ink-300 · decorative */
+    --color-text-inverse: #ffffff;
+    --color-text-link: #b02355;      /* brand-600 · 6.4:1 */
+
+    /* Surfaces → bg-surface-page … */
+    --color-surface-page: #fffdfb;    /* cream-50 */
+    --color-surface-card: #ffffff;
+    --color-surface-subtle: #fdf4f6;  /* blush-50 */
+    --color-surface-muted: #fbf3ec;   /* cream-100 */
+    --color-surface-inverse: #241318; /* ink-950 — footer / dark band */
+
+    /* Borders → border-border-subtle … */
+    --color-border-subtle: #fae6eb;  /* blush-100 hairline */
+    --color-border-default: #ecd5c0; /* cream-300 input */
+
+    /* --- Type scale: text-display-1 … text-overline ------------------------
+     *    Size, line-height, weight and tracking all come with the class. */
+    --text-*: initial;
+
+    --text-display-1: 56px;
+    --text-display-1--line-height: 64px;
+    --text-display-1--font-weight: 400;
+    --text-display-1--letter-spacing: -0.01em;
+
+    --text-display-2: 48px;
+    --text-display-2--line-height: 56px;
+    --text-display-2--font-weight: 400;
+    --text-display-2--letter-spacing: -0.01em;
+
+    --text-h1: 38px;
+    --text-h1--line-height: 44px;
+    --text-h1--font-weight: 400;
+
+    --text-h2: 30px;
+    --text-h2--line-height: 38px;
+    --text-h2--font-weight: 500;
+
+    --text-h3: 26px;
+    --text-h3--line-height: 32px;
+    --text-h3--font-weight: 500;
+
+    --text-h4: 20px;
+    --text-h4--line-height: 28px;
+    --text-h4--font-weight: 600;
+
+    --text-body-lg: 16px;
+    --text-body-lg--line-height: 26px;
+    --text-body-lg--font-weight: 400;
+
+    --text-body-md: 14px;
+    --text-body-md--line-height: 22px;
+    --text-body-md--font-weight: 400;
+
+    --text-body-sm: 13px;
+    --text-body-sm--line-height: 20px;
+    --text-body-sm--font-weight: 400;
+
+    --text-caption: 12px;
+    --text-caption--line-height: 16px;
+    --text-caption--font-weight: 500;
+
+    --text-overline: 11px;
+    --text-overline--line-height: 16px;
+    --text-overline--font-weight: 600;
+    --text-overline--letter-spacing: 0.2em;
+
+    /* --- shadcn bridge (must live in this block, AFTER the --color-*: reset
+     *    above — a reset clears this namespace across @theme blocks, so the
+     *    inline block can't hold these). Values resolve to :root / .dark. --- */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* --- shadcn tokens, mapped to Syara -------------------------------------- */
+:root {
+    --background: #fffdfb; /* surface-page */
+    --foreground: #291c21; /* text-primary */
+
+    --card: #ffffff;
+    --card-foreground: #291c21;
+
+    --popover: #ffffff;
+    --popover-foreground: #291c21;
+
+    --primary: #b02355; /* brand-600 */
+    --primary-foreground: #ffffff;
+
+    --secondary: #fbf3ec; /* cream-100 */
+    --secondary-foreground: #291c21;
+
+    --muted: #fbf3ec;
+    --muted-foreground: #6b565d; /* ink-600 */
+
+    --accent: #fae6eb; /* blush-100 */
+    --accent-foreground: #701636; /* brand-800 */
+
+    --destructive: #d92d20; /* error-600 */
+
+    --border: #ecd5c0; /* cream-300 */
+    --input: #ecd5c0;
+    --ring: #c93a68; /* brand-500 */
+
+    --chart-1: #c93a68;
+    --chart-2: #c9a24b;
+    --chart-3: #2a9a5f;
+    --chart-4: #e0820b;
+    --chart-5: #f04438;
+
+    --radius: 0.5rem;
+
+    --sidebar: #fffdfb;
+    --sidebar-foreground: #291c21;
+    --sidebar-primary: #b02355;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #fae6eb;
+    --sidebar-accent-foreground: #701636;
+    --sidebar-border: #fae6eb;
+    --sidebar-ring: #c93a68;
+
+    --instagram-hover: #e4405f;
+    --facebook-hover: #1877f2;
+    --tiktok-hover: #25f4ee;
+}
+
+.dark {
+    --background: #241318; /* ink-950 */
+    --foreground: #faf6f7; /* ink-50 */
+
+    --card: #3a2a30; /* ink-800 */
+    --card-foreground: #faf6f7;
+
+    --popover: #3a2a30;
+    --popover-foreground: #faf6f7;
+
+    --primary: #d95f86; /* brand-400 */
+    --primary-foreground: #241318;
+
+    --secondary: #524047; /* ink-700 */
+    --secondary-foreground: #faf6f7;
+
+    --muted: #524047;
+    --muted-foreground: #e2d6da; /* ink-200 */
+
+    --accent: #701636; /* brand-800 */
+    --accent-foreground: #faf6f7;
+
+    --destructive: #f97066; /* error-400 */
+
+    --border: #524047;
+    --input: #3a2a30;
+    --ring: #d95f86;
+
+    --chart-1: #d95f86;
+    --chart-2: #dcb968;
+    --chart-3: #4db57b;
+    --chart-4: #f59f1f;
+    --chart-5: #f97066;
+
+    --sidebar: #3a2a30;
+    --sidebar-foreground: #faf6f7;
+    --sidebar-primary: #d95f86;
+    --sidebar-primary-foreground: #241318;
+    --sidebar-accent: #524047;
+    --sidebar-accent-foreground: #faf6f7;
+    --sidebar-border: #524047;
+    --sidebar-ring: #d95f86;
+}
+
+/* --- Base ---------------------------------------------------------------- */
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    :root {
+        color-scheme: light;
+    }
+
+    .dark {
+        color-scheme: dark;
+    }
+
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        @apply bg-surface-page text-text-primary font-sans text-body-md;
+    }
+
+    h1, h2, h3, h4 {
+        @apply font-serif text-balance;
+    }
+    h1 { @apply text-h1 sm:text-display-2 lg:text-display-1; } /* hero */
+    h2 { @apply text-h3 sm:text-h2 text-brand-800; }           /* section titles */
+    h3 { @apply text-h3; }
+    h4 { @apply text-h4; }
+
+    a { @apply text-text-link; }
+
+    ::selection { @apply bg-blush-200 text-text-primary; }
+
+    input, textarea, select {
+        @apply border-border-default;
+    }
+
+    hr { @apply border-border-subtle; }
+}
+
+/* --- Small utilities ----------------------------------------------------- */
+/* "eyebrow", not "overline": Tailwind already has an `overline` text-decoration utility */
+@utility eyebrow {
+    @apply font-sans text-overline uppercase text-brand-600;
+}
+
+@utility logo {
+    @apply font-script text-brand-800;
+}

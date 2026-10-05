@@ -1,0 +1,35 @@
+enum MediaType {
+  IMAGE
+  VIDEO
+  FILE
+}
+
+model Media {
+  id   String    @id @default(cuid())
+  url  String
+  alt  String?
+  type MediaType
+
+  filePath String? // Local filesystem path for cleanup operations
+  fileSize Int? // File size in bytes
+  mimeType String? // MIME type (e.g., image/png, video/mp4, application/pdf)
+
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  productMedias           ProductMedia[]
+}
+
+model ProductMedia {
+  id String @id @default(cuid())
+
+  productId String
+  mediaId   String
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media   Media   @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  sortOrder Int     @default(0)
+  isPrimary Boolean @default(false)
+
+  @@unique([productId, mediaId])
+}

@@ -1,0 +1,42 @@
+enum Dosha {
+  VATA
+  PITTA
+  KAPHA
+}
+
+model Product {
+  id String @id @default(cuid())
+
+  name String
+  slug String @unique
+
+  shortDescription String?
+  description      String?
+
+  sku String? @unique
+
+  price          Decimal  @db.Decimal(10, 2)
+  discountAmount Decimal? @db.Decimal(10, 2)
+
+  stock Int @default(0)
+
+  featured Boolean @default(false)
+  isActive Boolean @default(true)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  dosha Dosha?
+
+  keyIngredients     String[] @default([])
+  recommendedUse     String[] @default([])
+  notRecommendedUse  String[] @default([])
+
+  media      ProductMedia[]
+  reviews    Review[]
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

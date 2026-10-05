@@ -1,0 +1,68 @@
+name: ayurdarpan
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    entrypoint:
+      - sh
+      - -c
+      - 'export POSTGRES_USER=$$DATABASE_USER POSTGRES_PASSWORD=$$DATABASE_PASSWORD POSTGRES_DB=$$DATABASE_NAME; exec docker-entrypoint.sh postgres'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$DATABASE_USER -d $$DATABASE_NAME']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    image: ghcr.io/ayurdarpan/backend:latest
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: sh -c "node_modules/.bin/prisma migrate deploy && node dist/src/index.js"
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_HOST: postgres
+    volumes:
+      - backend_uploads:/app/uploads
+      - backend_logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - '4000'
+
+  frontend:
+    image: ghcr.io/ayurdarpan/frontend:latest
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+    ports:
+      - '3000:3000'
+
+  admin:
+    image: ghcr.io/ayurdarpan/admin:latest
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - '3001:80'
+
+volumes:
+  pgdata:
+  backend_uploads:
+  backend_logs:

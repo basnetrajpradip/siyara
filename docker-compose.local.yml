@@ -1,0 +1,46 @@
+name: ayurdarpan-local
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    entrypoint:
+      - sh
+      - -c
+      - 'export POSTGRES_USER=$$DATABASE_USER POSTGRES_PASSWORD=$$DATABASE_PASSWORD POSTGRES_DB=$$DATABASE_NAME; exec docker-entrypoint.sh postgres'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $$DATABASE_USER -d $$DATABASE_NAME']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.local
+    command: sh -c "pnpm db:generate && pnpm db:migrate-prod && pnpm setup && pnpm dev"
+    env_file:
+      - ./backend/.env
+    environment:
+      CI: "true"
+      DATABASE_HOST: postgres
+    volumes:
+      - ./backend:/app
+      - backend_node_modules:/app/node_modules
+      - backend_uploads:/app/uploads
+      - backend_logs:/app/logs
+    ports:
+      - '4000:4000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  backend_node_modules:
+  backend_uploads:
+  backend_logs:

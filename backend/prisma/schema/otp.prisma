@@ -1,0 +1,14 @@
+enum OtpType {
+  PASSWORD_RESET
+}
+
+model Otp {
+  id        String   @id @default(cuid())
+  email     String
+  otp       String
+  type      OtpType
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email, type])
+}

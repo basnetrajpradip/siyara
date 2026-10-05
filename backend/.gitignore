@@ -1,0 +1,11 @@
+node_modules
+dist
+.env
+logs
+tsconfig.tsbuildinfo
+/prisma/generated/prisma
+.pnpm-store
+
+# Uploaded media files (managed by the application)
+media/*
+uploads/*

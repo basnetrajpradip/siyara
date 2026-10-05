@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "picocolors": "^1.0.0"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "reset-backend:local": "docker compose -f docker-compose.local.yml down --volumes --remove-orphans"
+  }
+}
