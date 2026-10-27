@@ -3,10 +3,16 @@ import { Playfair_Display, Jost, Pinyon_Script } from "next/font/google"
 import { Toaster } from "sonner"
 import "./globals.css"
 import AuthProvider from "@/components/providers/AuthProvider"
+import { FREE_SHIPPING_THRESHOLD, SITE } from "@/lib/config"
+import { formatRs } from "@/lib/format"
 
 export const metadata: Metadata = {
-  title: "Siyara",
-  description: "",
+  title: {
+    default: `${SITE.name} | ${SITE.tagline} | Women's Ethnic Wear in Nepal`,
+    // Pages that export their own `title` (e.g. a product page) become "Royal Red Bridal Lehenga | Siyara"
+    template: `%s | ${SITE.name}`,
+  },
+  description: `${SITE.description} Free delivery above ${formatRs(FREE_SHIPPING_THRESHOLD)}.`,
 }
 
 const playfair = Playfair_Display({
@@ -18,7 +24,7 @@ const playfair = Playfair_Display({
 
 const jost = Jost({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
   variable: "--font-jost",
   display: "swap",

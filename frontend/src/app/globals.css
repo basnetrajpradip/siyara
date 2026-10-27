@@ -374,3 +374,179 @@
 @utility logo {
     @apply font-script text-brand-800;
 }
+
+/* --- Motion -------------------------------------------------------------
+ *    In Tailwind v4 an `--animate-*` variable in @theme becomes a utility:
+ *    `--animate-fade-in` → `animate-fade-in`. Keyframes placed inside @theme
+ *    are only emitted when that utility is actually used. */
+@theme {
+    --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
+    --animate-fade-in: fade-in 0.25s ease;
+    --animate-drop-in: drop-in 0.28s var(--ease-out-soft);
+    --animate-drawer-in: drawer-in 0.32s var(--ease-out-soft);
+    --animate-drawer-in-left: drawer-in-left 0.32s var(--ease-out-soft);
+    --animate-toast-up: toast-up 0.3s var(--ease-out-soft);
+    --animate-pop-in: pop-in 0.35s ease;
+    --animate-badge-bounce: badge-bounce 0.45s ease;
+    --animate-float-soft: float-soft 5s ease-in-out infinite;
+    --animate-marquee-x: marquee-x 28s linear infinite;
+
+    @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes drop-in {
+        from { opacity: 0; transform: translateY(-14px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes drawer-in {
+        from { transform: translateX(100%); }
+        to { transform: translateX(0); }
+    }
+    @keyframes drawer-in-left {
+        from { transform: translateX(-100%); }
+        to { transform: translateX(0); }
+    }
+    @keyframes toast-up {
+        from { opacity: 0; transform: translateY(16px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes pop-in {
+        0% { transform: scale(0.4); }
+        60% { transform: scale(1.25); }
+        100% { transform: scale(1); }
+    }
+    @keyframes badge-bounce {
+        0%, 100% { transform: scale(1); }
+        40% { transform: scale(1.45); }
+    }
+    @keyframes float-soft {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+    @keyframes marquee-x {
+        from { transform: translateX(0); }
+        /* the marquee renders its items twice, so -50% lands exactly on the copy */
+        to { transform: translateX(-50%); }
+    }
+}
+
+/* --- Effects --------------------------------------------------------------
+ *    Ported from siyara-main/src/index.css. Raw rgba()/hex values are replaced
+ *    with tokens via color-mix(), so the palette stays the single source. */
+@utility no-scrollbar {
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+}
+
+@utility thin-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-blush-200) transparent;
+    &::-webkit-scrollbar { width: 6px; height: 6px; }
+    &::-webkit-scrollbar-thumb { background: var(--color-blush-200); border-radius: 999px; }
+}
+
+/* soft dotted backdrop for hero / promo */
+@utility dot-grid {
+    background-image: radial-gradient(
+        color-mix(in oklab, var(--color-brand-600) 14%, transparent) 1.2px,
+        transparent 1.2px
+    );
+    background-size: 18px 18px;
+}
+
+/* light petals + dots, for use on dark brand backgrounds (promo banner) */
+@utility petal-pattern {
+    background-image:
+        radial-gradient(ellipse 240px 160px at 12% 20%, color-mix(in oklab, var(--color-white) 14%, transparent), transparent 70%),
+        radial-gradient(ellipse 300px 200px at 88% 80%, color-mix(in oklab, var(--color-white) 10%, transparent), transparent 70%),
+        radial-gradient(color-mix(in oklab, var(--color-white) 16%, transparent) 1.2px, transparent 1.3px);
+    background-size: auto, auto, 22px 22px;
+}
+
+/* gradient underline that grows on hover, and stays for the active link */
+@utility nav-link {
+    position: relative;
+    &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 100%;
+        bottom: -4px;
+        height: 2px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--color-brand-500), var(--color-gold-400));
+        transition: right 0.28s ease;
+    }
+    &:hover::after,
+    &:focus-visible::after,
+    &[aria-current="page"]::after {
+        right: 0;
+    }
+}
+
+/* light sweep across a button on hover */
+@utility btn-shine {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(
+            105deg,
+            transparent 40%,
+            color-mix(in oklab, var(--color-white) 45%, transparent) 50%,
+            transparent 60%
+        );
+        transform: translateX(-120%);
+        transition: transform 0.7s ease;
+        pointer-events: none;
+    }
+    &:hover::before { transform: translateX(120%); }
+}
+
+/* Scroll reveal. Visible by default, so content never stays hidden when JS is
+ * slow or off. The <Reveal> component (Day 2) sets data-reveal="hidden" after
+ * mount, then "shown" when the element scrolls into view. */
+@utility reveal {
+    transition:
+        opacity 0.7s var(--ease-out-soft),
+        transform 0.7s var(--ease-out-soft);
+    &[data-reveal="hidden"] {
+        opacity: 0;
+        transform: translateY(26px);
+    }
+}
+
+/* --- Reduced motion -------------------------------------------------------
+ *    One switch for every effect above. Unlayered CSS beats Tailwind's
+ *    utilities layer, so this wins without !important. */
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+
+    .animate-fade-in,
+    .animate-drop-in,
+    .animate-drawer-in,
+    .animate-drawer-in-left,
+    .animate-toast-up,
+    .animate-pop-in,
+    .animate-badge-bounce,
+    .animate-float-soft,
+    .animate-marquee-x {
+        animation: none;
+    }
+
+    .reveal,
+    .reveal[data-reveal="hidden"] {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .nav-link::after { transition: none; }
+    .btn-shine::before { display: none; }
+}

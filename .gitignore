@@ -1,4 +1,5 @@
 node_modules
 .agent*
 AGENTS.md
-prakritiplan.md
+migration-plan.md
+CLAUDE.md
